@@ -100,8 +100,10 @@ jobs:
         run: uv run bash scripts/prestart.sh
         working-directory: backend
       - name: Run tests
-        run: uv run bash scripts/tests-start.sh "Coverage for ${{ github.sha }}"
+        run: uv run bash scripts/tests-start.sh "Coverage for $GITHUB_SHA"
         working-directory: backend
+        env:
+          GITHUB_SHA: ${{ github.sha }}
       - name: Stop containers
         run: docker compose down -v --remove-orphans
       - name: Store coverage files
@@ -178,7 +180,10 @@ jobs:
       - name: Stop any running containers
         run: docker compose down -v --remove-orphans
       - name: Run Playwright tests
-        run: docker compose run --rm playwright npx playwright test --fail-on-flaky-tests --trace=retain-on-failure --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        run: docker compose run --rm playwright npx playwright test --fail-on-flaky-tests --trace=retain-on-failure --shard="$SHARD_INDEX/$SHARD_TOTAL"
+        env:
+          SHARD_INDEX: ${{ matrix.shardIndex }}
+          SHARD_TOTAL: ${{ matrix.shardTotal }}
       - name: Stop containers
         run: docker compose down -v --remove-orphans
       - name: Upload blob report to GitHub Actions Artifacts
