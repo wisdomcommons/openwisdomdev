@@ -40,6 +40,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+      - name: Debug environment variables
+        run: |
+          echo "STACK_NAME: $STACK_NAME"
+          echo "DOMAIN: $DOMAIN"
+          echo "DOCKER_IMAGE_BACKEND: $DOCKER_IMAGE_BACKEND"
+          echo "DOCKER_IMAGE_FRONTEND: $DOCKER_IMAGE_FRONTEND"
       - name: Build containers
         run: docker compose -f docker-compose.yml --project-name "$STACK_NAME" build
       - name: Start containers
